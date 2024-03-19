@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Scrambled v1</title>
+</head>
+<body class="">
+	<style type="text/css">
+		.border {
+			border: solid red 1px;
+		}
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;		
+		}
+		body {
+			background-color: #eeeeee;
+			font-family: calibri;
+			font-size: 16pt;
+		}
+		.content {
+			width: 100%;
+			max-width: 500px;
+			height: 100%;
+			padding: 5px;
+			margin: auto;
+		}
+		.center {
+			text-align: center;
+		}
+		.pad{
+			padding: 8px;
+			border-radius: 5px;
+		}
+		#word {
+			letter-spacing: 5px;
+			border: solid gray 1px;
+		}
+	</style>
+	<div class="content">
+		<div class="center">
+			<h1 id="word">Loading...</h1>
+			<small id="hint">Loading...</small><br>
+			<small id="show_timer">00:00</small>
+			<br><br>
+			<input class="pad" onchange="check_answer();" type="search" id="userinput" placeholder="Your Answer">
+			<button class="pad" onclick="load_word(curr_word);">Shuffle</button>
+		</div>
+		
+		<!-- Footer -->
+		<br>
+		<div style="text-align: center; color: #b8b9ba;">
+			<small>
+				Scrambled<br>
+				By: Jason Aring
+			</small>
+		</div>
+		<br><br><br><br><br>
+	</div>
+
+	<script type="text/javascript">
+		///////////////////////////////////////////////////////////////////
+		//May 7, 2022
+		//By jasonxx
+
+		///////////////////////////////////////////////////////////////////
+		//Variables
+		var curr_word = 0;
+		var sec_count = 0;
+		var timer;
+		var timer_on_off = "off";
+		var sec_duration = 20; //min
+		const arr_word = shuffle([
+			["katalinuhan","Mahusay mag isip."],
+			["kalunoslunos","Nakakaawa."],
+			["nalilito","Di alam ang gagawin."],
+			["marupok","Hindi matibay."],
+			["aklatan","Maraming libro."],
+			["kalawakan","Universe."],
+			["kaginhawaan","Payapa."],
+			["katatawanan","Jokes..."],
+			["mayumi","Maganda."],
+			["makisig","Matipuno."],
+			["tahimik","Hindi maingay."],
+			["lasinggero","Mahilig sa tomaan."],
+			["pilipinas","Bayang sinilangan."]
+		]);
+
+		///////////////////////////////////////////////////////////////////
+		//What to do
+		window.addEventListener("load", function(){
+			start_timer();
+			load_word(curr_word);
+		});
+
+
+		///////////////////////////////////////////////////////////////////
+		//functions
+		function check_answer(){
+			let userinput = document.getElementById("userinput");
+			let ans = userinput.value;
+			if(ans == arr_word[curr_word][0]){
+				let word = document.getElementById("word");
+				word.innerHTML = arr_word[curr_word][0].toUpperCase();
+				stop_timer();
+				alert("Correct answer...");
+				curr_word ++;
+				load_word(curr_word);
+				start_timer();
+				userinput.value = "";
+			}else{
+				alert("Wrong answer...");
+			}
+		}
+
+		function load_word(index){
+			if(arr_word.length == index){
+				alert("No more words...");
+				location.reload();
+			}
+			let word = document.getElementById("word");
+			word.innerHTML = shuffle_words(arr_word[index][0].toUpperCase());
+			let hint = document.getElementById("hint");
+			hint.innerHTML = arr_word[index][1];
+		}
+
+		function shuffle_words(word){
+			return shuffle(Array.from(word)).join("");
+		}
+
+		function shuffle(array) {
+			return array.sort(() => Math.random() - 0.5);
+		}
+
+
+		function start_timer(){
+			if (timer_on_off == "off") {
+				timer_on_off = "on";
+				sec_count = 0;
+				counting();
+			}
+		}
+
+		function stop_timer(){
+			clearTimeout(timer);
+			timer_on_off = "off";
+		}
+
+		function counting() {
+			if(timer_on_off == "on"){
+				if(sec_count >= sec_duration){
+					stop_timer();
+					alert("Gameover: Time is up!");
+					location.reload();
+				}else{
+					sec_count++;
+				}
+				document.getElementById("show_timer").innerHTML = "Sec: "+add_zero(sec_count, 2);
+				timer = setTimeout(counting, 1000);
+			}	
+		}
+
+		function add_zero(num, places) {
+			var zero = places - num.toString().length + 1;
+			return Array(+(zero > 0 && zero)).join("0") + num;
+		}
+	</script>
+</body>
+</html>
