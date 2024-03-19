@@ -181,8 +181,9 @@
 					<br><br>
 					<small style="color: gray;">
 						<i>
-						You need to answer 20 questions... choose the best possible answer by clicking the respective button...<br> 
-						You have 10 minutes to complete the quiz do not close the browser if you are not yet done...<br>
+						You need to answer <b><span class="no_q">?</span></b> questions... choose the best possible answer by clicking the respective button...<br> 
+						You have <b>10 minutes</b> to complete the quiz do not close the browser if you are not yet done...<br>
+						<br>
 						Good luck... 
 						</i>
 					</small>
@@ -287,6 +288,7 @@
 		var minutes_quizduration = 10; //min
 		var button_delay = 3; //sec
 		var prog_width = 0;
+		var total_questions = 5;
 		//random questions
 
 		var topic_title = "HTML CSS JS";
@@ -313,18 +315,18 @@
 				"d":"Muscles" 
 			},
 			{	"no":"4",
-				"q":"This codes<br>&lt;p&gt;content&lt;/p&gt;<br>is an example of?", 
+				"q":"&lt;p&gt;content&lt;/p&gt;<br>is use an example of what technology?", 
 				"a":"PHP", 
 				"b":"HTML", 
 				"c":"JAVASCRIPT", 
 				"d":"CSS"
 			},
 			{	"no":"5",
-				"q":"The following list are HTML attributes except one.", 
+				"q":"The following list are HTML Attributes except one.", 
 				"a":"class", 
 				"b":"id", 
 				"c":"width", 
-				"d":"&lt;div&gt;" 
+				"d":"&lt;img&gt;" 
 			},
 			{	"no":"6",
 				"q":"What tag should I use to create a division?", 
@@ -336,20 +338,19 @@
 			{	"no":"7",
 				"q":"Choose the right HTML syntax.", 
 				"a":"&lt;div class='title'&gt;Hi to all...&lt;/div&gt;", 
-				"b":"&lt;img src=''my.jpg' width=''500' height='600'&gt;", 
-				"c":"&lt;a ='https://www.mysite.com'&gt;click&lt;a&gt;", 
+				"b":"&lt;img src='my.jpg'' width='500' height='600'&gt;", 
+				"c":"&lt;a href='https://www.mysite.com'&gt;click&lt;a&gt;", 
 				"d":"&lt;button type='button'&gt;Click Me!&lt;/button&gt;" 
 			},
 			{	"no":"8",
-				"q":"We want to change the background color of the ff. tag<br>&lt;p&gt;<br>to red, what css code will work?", 
+				"q":"We want to change the background color of a tag<br> &lt;p&gt; to red, what css code will work?", 
 				"a":".p {background-color: red;}", 
 				"b":"p {background-color: red;}", 
 				"c":"#p {background-color: red;}", 
 				"d":"par {background-color: red;}" 
 			},
 			{	"no":"9",
-				"q":"We want to change the width of the &lt;div&gt; with a class name of mydiv to 100%,<br>what css code will work?", 
-				"a":".div {width: 100%;}", 
+				"q":"We want to change the width to 100% of<br>&lt;div class='mydiv'&gt abc &lt;/div&gt;<br> by selecting its classname,<br>what css code will work?", 			"a":".div {width: 100%;}", 
 				"b":"div {width: 100%;}", 
 				"c":"#mydiv {width: 100%;}", 
 				"d":".mydiv {width: 100%;}" 
@@ -362,21 +363,21 @@
 				"d":".div {padding: 30px; margin: 30px;}" 
 			},
 			{	"no":"11",
-				"q":"Complete the following statement, JavaScript can...", 
-				"a":"add/change/remove Code from SQL",
-				"b":"add/change/remove HTML elements attributes events and CSS styles", 
+				"q":"Complete the following statement;<br>JavaScript can...", 
+				"a":"add/change/remove Codes from SQL",
+				"b":"add/change/remove HTML elements, attributes, events and CSS styles", 
 				"c":"add/change/remove PHP Codes", 
 				"d":"add/change/remove Data from Local Disk"
 			},
 			{	"no":"12",
-				"q":"Primary function of querySelector('element')<br>is to ____", 
+				"q":"Function of querySelector('element');<br>is to ____", 
 				"a":"select an element by classname only",
 				"b":"select an element by id only", 
 				"c":"select an element by tagname, id or classname", 
 				"d":"select an element by query"
 			},
 			{	"no":"13",
-				"q":"Primary function of getElementsByTagName('element')<br>is to ____", 
+				"q":"Function of getElementsByTagName('element')<br>is to ____", 
 				"a":"select an element by id only",
 				"b":"select an element by class only", 
 				"c":"select an element by tagname only", 
@@ -411,7 +412,7 @@
 				"d":"21" 
 			},
 			{	"no":"18",
-				"q":"<br>alert('Hi to all!');<br>What will be the effect when we use this function?", 
+				"q":"alert('Hi to all!');<br>What will be the effect when we use this function?", 
 				"a":"It will pop up a message saying 'Good day to all!'",
 				"b":"Will call a function called 'Hi to all'",
 				"c":"Nothing", 
@@ -420,7 +421,7 @@
 			{	"no":"19",
 				"q":"We want to count from 1 to 100 automatically, what javascript function can do the task?", 
 				"a":"alert('1 to 100');",
-				"b":"for( var i = 1; i <= 1; i++ ) { //do something }",
+				"b":"for( var i = 1; i <= 1; i++ ) {<br> //do something <br>}", 
 				"c":"console.log('1 to 100')", 
 				"d":"if( i<100 ){ //do something }" 
 			},
@@ -430,11 +431,46 @@
 				"b":"Replace/Change input value.", 
 				"c":"Replace/Change attribute value.", 
 				"d":"Replace/Change id name." 
+			},
+			{	"no":"21",
+				"q":"Basic structure of an Array.", 
+				"a":"let arr = (1,2,3,4);", 
+				"b":"const arr = [1,2,3,4];", 
+				"c":"const arr = (1,2,3,4);", 
+				"d":"var arr = 1,2,3,4;"
+			},
+			{	"no":"22",
+				"q":"Basic structure of a Function.", 
+				"a":"func add() { //do something };", 
+				"b":"function add { //do something };",  
+				"c":"function add() { //do something };",  
+				"d":"functions add[] ( //do something );"
+			},
+			{	"no":"23",
+				"q":"Basic structure of a for loop.", 
+				"a":"if(var i=0;i<100;i++){ //loop }", 
+				"b":"for(i++){ //loop }",  
+				"c":"if(i>=100){ //true }",  
+				"d":"for(var i=0;i<100;i++){ //loop }" 
+			},
+			{	"no":"24",
+				"q":"Correct example of an if statement.", 
+				"a":"if(var x=100){<br>//true<br>}else{<br>//false<br>}", 
+				"b":"if(x==100){<br>//true<br>}else{<br>//false<br>}", 
+				"c":"if(x*y){<br>//true<br>}else{<br>//false<br>}", 
+				"d":"if('true'){<br>//true<br>}else{<br>//false<br>}"
+			},
+			{	"no":"25",
+				"q":"Use of console.log().", 
+				"a":"it promps you error.", 
+				"b":"it promps you the value of a variable.", 
+				"c":"it promps you missing code.", 
+				"d":"it promps you an alert message."
 			}
 		]);
 
 		//key to correction ENCRYPTED answers HAHAHAHAHA!
-		const a_arr = ["1618","1648","1681","1710","1743","1773","1802","1805","1834","1867","48674","48706","48738","48769","48801","48830","48862","48894","48925","48954","49635"];
+		const a_arr = ["1618","1648","1681","1710","1743","1773","1802","1805","1834","1867","48674","48706","48738","48769","48801","48830","48862","48894","48925","48954","49635","49667","49699","49731","49760","49791"];
 
 
 
@@ -467,13 +503,17 @@
 			for (let i = 0; i < currdate.length; i++) {
 			  currdate[i].innerHTML = date;
 			}
+			let no_q = document.getElementsByClassName('no_q');
+			for (let i = 0; i < no_q.length; i++) {
+			  no_q[i].innerHTML = total_questions;
+			}
 		}
 
 		function calculate_progress(){
 			let ww = document.getElementById('myprog').getBoundingClientRect().width;
 			let ww2 = document.getElementById('myprog2').getBoundingClientRect().width;
 
-			let item_count = q_arr.length;
+			let item_count = total_questions;
 			document.getElementById("myprog").setAttribute("max",ww);
 			document.getElementById("myprog").value = (ww/item_count)*current_question_no;
 			document.getElementById("myprog2").setAttribute("max",ww2);
@@ -493,10 +533,7 @@
 			}, button_delay*1000);
 		}	
 
-		function make_key_to_correction(){
-			const none_encript_a_arr = [
-				
-			];
+		function make_key_to_correction(none_encript_a_arr=[]){
 			let string = "";
 			none_encript_a_arr.forEach((val, index) => {
 				string += '"'+hashCode(val)+'",';
@@ -506,7 +543,7 @@
 
 		function compute_score(){
 			let score = 0;
-			let outoff = q_arr.length;
+			let outoff = total_questions;
 			current_answers.forEach((val1, index1) => {
 				a_arr.forEach((val2, index2) => {
 					if(hashCode(val1) == val2){
@@ -540,10 +577,10 @@
 		}
 
 		function load_questions(arr,i){
-			let arr_count = arr.length;
-			if(i < arr_count){
+			//let arr_count = arr.length;
+			if(i < total_questions){
 				let number = Number(i)+1;
-				document.getElementById("questions").innerHTML = "Q"+number+": "+arr[i]['q'];
+				document.getElementById("questions").innerHTML = "Q"+number+":<br>"+arr[i]['q'];
 				document.getElementById("ans_a").innerHTML = "A. "+arr[i]['a'];
 				document.getElementById("ans_b").innerHTML = "B. "+arr[i]['b'];
 				document.getElementById("ans_c").innerHTML = "C. "+arr[i]['c'];
@@ -578,7 +615,7 @@
 			}
 			let el5 = document.getElementsByClassName("total_q");
 			for (let i = 0; i < el5.length; i++) {
-			  el5[i].innerHTML = q_arr.length;
+			  el5[i].innerHTML = total_questions;
 			}
 			let el6 = document.getElementsByClassName("topic_title");
 			for (let i = 0; i < el6.length; i++) {
