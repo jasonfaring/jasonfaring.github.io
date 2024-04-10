@@ -74,6 +74,45 @@
 		// April 8 2024
 		// By jasonxx
 
+		function preloadImage(url){
+			const img = new Image();
+			img.src = url;
+			return img;
+		}
+
+		function preloadImages(images) {
+			for (var i = 0; i < images.length; i++) {
+				images[i] = preloadImage(images[i]);
+			}
+			return images;
+		}
+
+		//-- usage --//
+		let arr = [
+		  "data/assets/background/1.png",
+		  "data/assets/background/2.png",
+		  "data/assets/background/3.png",
+		  "data/assets/background/4.png",
+		  "data/assets/background/5.png",
+		  "data/assets/background/6.png",
+		  "data/assets/background/7.png",
+		  "data/assets/char1/angry.png",
+		  "data/assets/char1/laugh.png",
+		  "data/assets/char1/normal.png",
+		  "data/assets/char1/sad.png",
+		  "data/assets/char1/smile.png",
+		  "data/assets/char1/smile2.png",
+		  "data/assets/char2/angry.png",
+		  "data/assets/char2/laugh.png",
+		  "data/assets/char2/normal.png",
+		  "data/assets/char2/sad.png",
+		  "data/assets/char2/smile.png",
+		  "data/assets/char2/smile2.png"
+		]
+
+		const images = preloadImages(arr);
+		console.dir(images);
+
 		window.addEventListener("load", function(){
 			//create some basic elements
 			auto_create_basic_element();
@@ -84,24 +123,9 @@
 		});
 
 		
-		function load_speach(char,charname,speech,emotion,animation='animate__pulse'){
-			document.getElementById('char_name').innerHTML = `${charname}:`;
-			document.getElementById('words').innerHTML = '';
-			animate_char(char,animation);
-			load_character(char,emotion);
+		
 
-			let input_this_speech = '';
-			let count = speech.length;
-			
-			const timer = ms => new Promise(res => setTimeout(res, ms))
-			async function load () {
-				for (var i = 0; i < count; i++) {
-					document.getElementById('words').innerHTML += speech[i];
-					await timer(30);
-				}
-			}
-			load();
-		}
+
 	</script>
 </body>
 </html>
