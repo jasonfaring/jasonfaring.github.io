@@ -118,3 +118,23 @@ function show_hide_diag(what){
 		document.getElementById('dialogue_text_area').style.opacity = '0';
 	}
 }
+
+
+function load_speach(char,charname,speech,emotion,animation='animate__pulse'){
+	document.getElementById('char_name').innerHTML = `${charname}:`;
+	document.getElementById('words').innerHTML = '';
+	animate_char(char,animation);
+	load_character(char,emotion);
+
+	let input_this_speech = '';
+	let count = speech.length;
+	
+	const timer = ms => new Promise(res => setTimeout(res, ms))
+	async function load () {
+		for (var i = 0; i < count; i++) {
+			document.getElementById('words').innerHTML += speech[i];
+			await timer(30);
+		}
+	}
+	load();
+}
