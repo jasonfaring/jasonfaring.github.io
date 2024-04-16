@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<link rel="stylesheet" href="data/mycss.css?ver=v2">
+	<link rel="stylesheet" href="data/sys/all.min.css">
+	<script src="data/sys/all.min.js"></script>
+	<script src="data/myjs.js?ver=v2"></script>
+	<script type="text/javascript">
+		/////////////////////////////////////////////////////////////////////////////////
+		//April 8 2024
+		//by jasonxx
+		/////////////////////////////////////////////////////////////////////////////////
+		//start editing here
+
+		//add a character objects
+		const char1_obj = {
+			name:"Kate",
+			loc:"L",
+			folder:"char1",
+			angry:"angry.png",
+			laugh:"laugh.png",
+			normal:"normal.png",
+			sad:"sad.png",
+			smile:"smile.png",
+			smile2:"smile2.png"
+		}
+		const char2_obj = {
+			name:"Nikka",
+			loc:"R",
+			folder:"char2",
+			angry:"angry.png",
+			laugh:"laugh.png",
+			normal:"normal.png",
+			sad:"sad.png",
+			smile:"smile.png",
+			smile2:"smile2.png"
+		}
+		const char3_obj = {
+			name:"Sam",
+			loc:"C",
+			folder:"char3",
+			angry:"angry.png",
+			laugh:"laugh.png",
+			normal:"normal.png",
+			sad:"sad.png",
+			smile:"smile.png",
+			smile2:"smile2.png"
+		}
+		const narrator_obj = {
+			name:"Narrator",
+			loc:"N",
+			folder:"",
+			angry:"",
+			laugh:"",
+			normal:"",
+			sad:"",
+			smile:"",
+			smile2:""
+		}
+		const story_flow = {
+			start: function(){
+				//reset all display
+    			reset();
+
+    			//run random music
+				let audarr = ['joy1.mp3','mistery1.mp3','slow2.mp3'];
+				play_audio(audarr[getRandomInt(audarr.length)]);
+
+				//change title and sublitle
+				el('#title_hero').innerHTML = "Ang Magkaibigan";
+				el('#sub_title_hero').innerHTML = "Demo story";
+
+				//force show title
+				show_hide('title_area','show');
+
+				//Load random background
+				let backarr = ['store2.jpg','street2.jpg','store2.jpg'];
+				load_a_background(backarr[getRandomInt(backarr.length)]);
+  			},
+  			scene0: {
+  				background:'city2.jpg',
+				music:'mistery2.mp3',
+				dialogue:[
+					function(){
+						load_speach(narrator_obj.loc,'remove_all_character','',narrator_obj.name,`May dalawang magkaibigang matagal silang di nagkita kaya sabik sila sa isat isa...`,'');
+						show_hide('back','hide');
+						add_onclick_evt('next','story.next();');
+					},
+					function(){
+						load_speach(char2_obj.loc,char2_obj.folder,char2_obj.laugh,char2_obj.name,
+							`Kamusta ka namis kita ${char1_obj.name}... Anlayo mo na sa amin`,
+							'animate_shake_x');
+						show_hide('back','hide');
+						add_onclick_evt('next','story.next();');
+					},
+					function(){
+						load_speach(char1_obj.loc,char1_obj.folder,char1_obj.sad,char1_obj.name,
+							`Oo nga eh, sobrang miss kita. Alam mo bang tumawag ako sayo noong isang araw para mag milktea...`,
+							'animate_pulse');
+						show_hide('back','hide');
+						add_onclick_evt('next','story.next();');
+					},
+					function(){
+						load_speach(char2_obj.loc,char2_obj.folder,char2_obj.laugh,char2_obj.name,
+							`Ah ganun ba, naku sorry wla ako kahapon. Tinulungan ko si nanay`,
+							'animate_shake_x');
+						show_hide('back','show');add_onclick_evt('back','story.back();');
+						add_onclick_evt('next','story.next();');
+					}
+				]
+  			},
+  			scene1: {
+  				background:'store2.jpg',
+				music:'mistery1.mp3',
+				dialogue:[
+					function(){
+						load_speach(char1_obj.loc,char1_obj.folder,char1_obj.smile,char1_obj.name,
+							`Kamusta naman sa school mo?`,
+							'animate_pulse');
+						show_hide('back','hide');
+						add_onclick_evt('next','story.next();');
+					},
+					function(){
+						load_speach(char2_obj.loc,char2_obj.folder,char2_obj.smile,char2_obj.name,
+							`Ayos naman, ${char1_obj.name}. Ikaw? Kamusta ang bagong school mo?`,
+							'animate_pulse');
+						show_hide('back','hide');
+						add_onclick_evt('next','story.next();');
+					},
+					function(){
+						load_speach(char1_obj.loc,char1_obj.folder,char1_obj.smile,char1_obj.name,
+							`Maganda dun ${char2_obj.name}. Balita ko ikaw din maganda ang school mo?`,
+							'animate_pulse');
+						show_hide('back','hide');
+						add_onclick_evt('next','story.next();');
+					},
+					function(){
+						load_speach(char2_obj.loc,char2_obj.folder,char2_obj.laugh,char2_obj.name,
+							`Hahah di naman... Tara mag milktea tayo...`,
+							'animate_pulse');
+						show_hide('back','hide');
+						add_onclick_evt('next','story.next();');
+					},
+					function(){
+						load_speach(char1_obj.loc,char1_obj.folder,char1_obj.smile,char1_obj.name,
+							`Sige ba...`,
+							'animate_shake_y');
+						show_hide('back','hide');
+						add_onclick_evt('next','story.next();');
+					},
+					function(){
+						load_speach(narrator_obj.loc,'','',narrator_obj.name,`At ng milktea nga ang dalawa...`,'');
+						show_hide('back','hide');
+						add_onclick_evt('next','story.next();');
+					},
+					function(){
+						load_speach(narrator_obj.loc,'remove_all_character','',narrator_obj.name,`Dito nagtatapos ang kwento...`,'');
+						show_hide('back','show');add_onclick_evt('back','story.back();');
+						add_onclick_evt('next','story.next();');
+					}
+				]
+  			}
+		}
+
+		class story_class {
+			constructor() {
+				this.story = false;
+				this.charL = false;
+				this.charC = false;
+				this.charR = false;
+				this.narrator = false;
+				this.player = false;
+				this.current_scene = 0;
+				this.current_dialogue = 0;
+				this.scene_count = 0;
+			}
+			start(){
+				this.story.start();
+				add_onclick_evt('play_butt','story.next(true)');
+				this.scene_count = Object.keys(this.story).length-1;
+			}
+			async next(pause=false){
+				if(pause){
+					reset();
+					await sleep(1500);
+				}
+				if(still_talking == true){console.log("Still talking...");return false;}
+				let dis_scene = this.story['scene'+this.current_scene];
+				let dialogue_count = dis_scene.dialogue.length;
+				
+					show_hide('title_area','hide');
+					if(this.current_dialogue == 0){
+						if(dis_scene.background != ""){
+							load_a_background(dis_scene.background);
+						}
+						if(dis_scene.music != ""){
+							play_audio(dis_scene.music);
+						}
+					}
+					//console.log(dialogue_count-1+" "+this.current_dialogue);
+					if(dialogue_count >= 0 && (dialogue_count-1) >= this.current_dialogue){
+						//let data = dis_scene.dialogue[this.current_dialogue-1];
+						dis_scene.dialogue[this.current_dialogue]();
+						this.current_dialogue += 1;
+					}else{
+						if(this.current_scene != 'end'){
+							//console.log((this.scene_count-1)+" "+this.current_scene);
+							if((this.scene_count-1) == this.current_scene){
+								console.log('No more scene...');
+								this.current_scene = 0;
+								this.current_dialogue = 0;
+								reset();
+								await sleep(1500);
+								this.start();
+							}else{
+								this.current_dialogue = 0;
+								this.current_scene += 1;
+								reset();
+								await sleep(1500);
+								this.next();
+							}
+						}else{
+							console.log('End go to credit...');
+							this.current_scene = 0;
+							this.current_dialogue = 0;
+							reset();
+							await sleep(1500);
+							this.start();
+						}
+					}
+				
+			}
+			async back(){
+				this.current_dialogue = 0;
+				if(this.current_scene == 0){
+					reset();
+					await sleep(1500);
+					this.start();
+				}else{
+					this.current_scene --;
+					reset();
+					await sleep(1500);
+					this.next();
+				}
+			}
+		}
+
+		//create a story class
+		let story = new story_class();
+		story.story = story_flow;
+		story.charL = char1_obj;
+		story.charC = char2_obj;
+		story.charR = char3_obj;
+		story.narrator = narrator_obj;
+
+		window.addEventListener("load", function(){
+			//do not remove this///////////////
+			auto_create_basic_element();
+			//do not remove this///////////////
+
+			//you can remove this////////////////////
+			//sample preview
+			let def_background = "city1.jpg";
+			load_a_background(def_background);
+			load_image('L','char1','normal.png');
+			load_image('C','char2','smile.png');
+			load_image('R','char3','angry.png');
+			/////////////////////////////////////////
+		});
+	</script>
+</head>
+<body>
+	<div display_data="show" id="menu_area">
+		<div>
+			<button class="secondary_butt" style="color:var(--bgcolor_primary);" onclick="alert(version_detils)">v1.0</button>
+		</div>
+		<div>
+			<button display_data="show" id="back" class="secondary_butt" onclick=""><i class="fa fa-chevron-left"></i></button>
+			<span display_data="show" id="menu_action_button"></span>
+			<button display_data="show" id="next" class="secondary_butt" onclick=""><i class="fa fa-chevron-right"></i></button>
+		</div>
+	</div>
+	<div id="service_menu">
+		<button class="secondary_butt" onclick="show_hide('service_menu_inner');slide('service_menu_inner','500px');"><i class="fa fa-cog"></i></button>
+		<div display_data="hide" id="service_menu_inner" style="height:0px;">
+			<div class="text_dialogue">Service Menu</div>
+			<hr>
+			<small>
+				Use this area as your hidden menu for some settings...
+			</small>
+			<br>
+			<br>
+
+			<small>Demo</small><br>
+			<button class="secondary_butt" onclick="story.start();">Play Demo</button>
+			<br>
+			<br>
+
+			<small>Title Background and Dialogue</small><br>
+			<button class="secondary_butt" onclick="show_hide('title_area');">Show/Hide Title</button>
+			<select id="mySelect" onchange="load_a_background(el('#mySelect').value);">
+				<option>clinic1.jpg</option>
+				<option>clinic2.jpg</option>
+				<option>school1.jpg</option>
+				<option>school2.jpg</option>
+				<option>sroom1.jpg</option>
+				<option>sroom2.jpg</option>
+				<option>city1.jpg</option>
+				<option>city2.jpg</option>
+				<option>city3.jpg</option>
+				<option>city4.jpg</option>
+				<option>room1.jpg</option>
+				<option>room2.jpg</option>
+				<option>store1.jpg</option>
+				<option>store2.jpg</option>
+				<option>street1.jpg</option>
+				<option>street2.jpg</option>
+				<option>street3.jpg</option>
+				<option>street4.jpg</option>
+				<option>office1.jpg</option>
+				<option>office2.jpg</option>
+				<option>office3.jpg</option>
+			</select>
+			<button class="secondary_butt" onclick="show_hide('dialogue_area');">Show/Hide Dialogue</button>
+			<br>
+			<br>
+
+			<small>Main menu</small><br>
+			<button class="secondary_butt" onclick="show_hide('menu_area');">Show/Hide Menu</button>
+			<button class="secondary_butt" onclick="
+				add_onclick_evt('next','alert(`added next onclick function`);');
+				add_onclick_evt('back','alert(`added back onclick function`);');
+			">set back/next onclick function</button>
+			<button class="secondary_butt" onclick="
+				remove_function_button();
+				add_function_button('a1','Talk L','load_speach(`L`,`char1`,`laugh.png`,`Kate`,`Ano ba ito bat anggaling ko...`,`animate_pulse`);');
+				add_function_button('a2','Talk C','load_speach(`C`,`char2`,`sad.png`,`Nikka`,`Naku sana matapos ko ito.`,`animate_shake_x`);');
+				add_function_button('a3','Talk R','show_hide(`R`,`show`);animate_char(`R`,`animate_shake_y`);');
+			">add 3 action button with function</button>
+			<br>
+			<br>
+
+
+			<small id="selected_char">Left char</small><br>
+			<select id="mySelect1" onchange="el('#selected_char').innerHTML=this.options[this.selectedIndex].text;load_image(el('#mySelect1').value,el('#mySelect2').value,el('#mySelect3').value);">
+				<option value="L">Left char</option>
+				<option value="C">Center char</option>
+				<option value="R">Right char</option>
+			</select>
+			<select id="mySelect2" onchange="load_image(el('#mySelect1').value,el('#mySelect2').value,el('#mySelect3').value);">
+				<option>char1</option>
+				<option>char2</option>
+				<option>char3</option>
+			</select>
+			<select id="mySelect3" onchange="load_image(el('#mySelect1').value,el('#mySelect2').value,el('#mySelect3').value);">
+				<option>angry.png</option>
+				<option>laugh.png</option>
+				<option>normal.png</option>
+				<option>sad.png</option>
+				<option>smile.png</option>
+				<option>smile2.png</option>
+			</select>
+			<select id="mySelect4" onchange="animate_char(el('#mySelect1').value,el('#mySelect4').value);">
+				<option>animate_shake_x</option>
+				<option>animate_shake_y</option>
+				<option>animate_pulse</option>
+			</select>
+			<button class="secondary_butt" onclick="show_hide(el('#mySelect1').value);">Show/Hide Toggle</button>
+			<br>
+			<br>
+
+			<small>Talk Test</small><br>
+			<button class="secondary_butt" onclick="load_speach('L','char1','laugh.png','Kate','Ngayon ay ang kaarawan kanya. Aalis na siya bukas sa Europe.','animate_pulse');">Talk L</button>
+			<button class="secondary_butt" onclick="load_speach('C','char2','smile.png','Nikka','Mag-aral ko ang Italiano kasi gusto ko pumunta sa Italy! Gusto ang pakain ang kuktura at maganda ang mga italiano','animate_shake_y');">Talk R</button>
+			<button class="secondary_butt" onclick="load_speach('R','char3','normal.png','Sam','Ang action tag at dialogue tag ay mga pariralang ginagamit at nilalagay bago, pakatapos, o sa gitna ng dayalogo.','animate_shake_x');">Talk C</button>
+			<button class="secondary_butt" onclick="load_speach('N','','','Narrator','Sa bawat yugto ng ating paglalakbay, may mga salita na nagbibigay-inspirasyon, lakas, at pag-asa sa atin.','');">Narrator showing characters</button>
+			<button class="secondary_butt" onclick="load_speach('N','remove_all_character','','Narrator','Sa bawat yugto ng ating paglalakbay, may mga salita na nagbibigay-inspirasyon, lakas, at pag-asa sa atin.','');">Narrator remove characters</button>
+			<br>
+			<br>
+
+			<small>Audio Test</small><br>
+			<select id="mySelect5" onchange="play_audio(el('#mySelect5').value);">
+				<option>ambient.mp3</option>
+				<option>joy1.mp3</option>
+				<option>joy2.mp3</option>
+				<option>mistery1.mp3</option>
+				<option>mistery2.mp3</option>
+				<option>slow1.mp3</option>
+				<option>slow2.mp3</option>
+				<option>slow3.mp3</option>
+			</select>
+			<button class="secondary_butt" onclick="stop_audio();">Stop</button>
+			<br>
+			<br>
+
+			<small>Sample buttons</small><br>
+			<button class="primary_butt" onclick="">Primary Button</button>
+			<button class="secondary_butt" onclick="">Secondary Button</button>
+			<br>
+			<br>
+		</div>
+	</div>
+</body>
+</html>
