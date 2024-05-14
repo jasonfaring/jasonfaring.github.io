@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Typing Game</title>
+
+	<!-- bootstrap css and my custom css -->
+	<link rel="stylesheet" href="data/bootstrap/bootstrap.min.css">
+	<link rel="stylesheet" href="data/mycss.css">
+
+	<!-- bootstrap jquery and my custom javascript files -->
+	<script src="data/bootstrap/bootstrap.bundle.min.js"></script>
+	<script src="data/myjs.js"></script>
+	
+	<script type="text/javascript">
+		/////////////////////////////////////////////////////////////////////////////////
+		//May 13 2024
+		//by jasonxx
+		/////////////////////////////////////////////////////////////////////////////////
+		const words = "producer promotion means depression divorce cheese negotiation method refer source smart consultation breast paper hide evening unique distance no complex ruin image embryo cutting wire ignorant match pudding vegetable loan outlook houseplant lend rebellion photocopy picture exchange norm chin marine heat stamp courage occasion merchant firefighter gradient vessel particle grounds prejudice brink communication mountain bar calm deadly monstrous smooth honest indoor freight row endorse thick abridge hike pill bother pilot intervention landowner hypothesis concede revive basin vehicle crossing track hurt merchant recovery mirror favor sport reach painter dawn question captivate easy quota dark jurisdiction crop hotdog jump fish restoration competence justice diamond seasonal embrace first activate spoil student concept occupation initiative bargain indication other feign thought society inch kick challenge racism swim sour mind dealer peasant body white bald argument pole reinforce result good taxi taste profession cry tragedy belong step abandon training general bottle program origin parking matrix summary";
+		const words_arr = words.split(" ");
+		var interval_timer = null;
+		var temp_words_arr = [];
+		var current_letter = 0;
+		var no_words = 1;
+		var add_no_of_words_if_done = 1;
+		var player_score = 0;
+		var time_interval = 30;
+
+		function update_nowords_time_score(what,val){
+			let nowords = document.getElementById("nowords");
+			let score = document.getElementById("score");
+			switch(what){
+				case "nowords":
+					nowords.textContent = `${val} Level`;
+				break;
+				case "time":
+					startTimer(val, document.getElementById('time'));
+				break;
+				case "score":
+					score.textContent = `${val}`;
+				break;
+			}
+		}
+
+		function get_new_words(){
+			document.getElementById("words").innerHTML = "";
+			temp_words_arr = [];
+			current_letter = 0;
+			let shuffled = words_arr.sort(() => 0.5 - Math.random());
+			return shuffled.slice(0, no_words);
+		}
+
+		function color_the_letters(text_color){
+			let dis = document.getElementById("words");
+			dis.innerHTML = "";
+			for (var i = 0; i < temp_words_arr.length; i++) {
+				if(temp_words_arr[i] != " "){
+					if(current_letter == i){
+						dis.innerHTML += `<b class='${text_color}'>${temp_words_arr[i]}</b>`;
+					}else{
+						dis.innerHTML += `${temp_words_arr[i]}`;
+					}
+				}else{
+					if(current_letter == i){
+						dis.innerHTML += `<b class='${text_color}'>_</b>`;
+					}else{
+						dis.innerHTML += `${temp_words_arr[i]}`;
+					}
+				}		
+			}
+		}
+
+		function load_words(arr){
+			let dis = document.getElementById("words");
+			for (var i = 0; i < arr.length; i++) {
+				for (var ii = 0; ii < arr[i].length; ii++) {
+					if(current_letter == i && 0 == ii){
+						dis.innerHTML += `<b class='text-warning'>${arr[i][ii]}</b>`;
+					}else{
+						dis.innerHTML += `${arr[i][ii]}`;
+					}
+					temp_words_arr.push(arr[i][ii]);
+				}
+				if(i < arr.length-1){
+					dis.innerHTML += ` `;
+					temp_words_arr.push(" ");
+				}
+			}
+			let meter = document.getElementById("meter");
+			meter.setAttribute("max", temp_words_arr.length);
+			meter.setAttribute("value", 0);
+			update_nowords_time_score("time",time_interval);
+			update_nowords_time_score("nowords",arr.length);
+		}
+
+		function startTimer(duration, display) {
+			if(interval_timer != null){
+				clearInterval(interval_timer);
+			}
+	    	var timer = duration, minutes, seconds;
+			interval_timer = setInterval(function () {
+				minutes = parseInt(timer / 60, 10);
+				seconds = parseInt(timer % 60, 10);
+
+				minutes = minutes < 10 ? "0" + minutes : minutes;
+				seconds = seconds < 10 ? "0" + seconds : seconds;
+
+				display.textContent = minutes + ":" + seconds;
+
+				if (--timer < 0) {
+					timer = duration;
+					alert(`Time is up! your score is ${player_score}...`);
+					location.reload();
+				}
+			}, 1000);
+		}
+
+		window.addEventListener("load", function(){
+			load_words(get_new_words());
+			update_nowords_time_score("time",time_interval);
+			document.onkeypress = function(event){
+			    let dis_letter = event.key;
+			    let cur_letter = temp_words_arr[current_letter];
+			    if(cur_letter == dis_letter){
+			    	//console.log("good "+cur_letter);
+			    	current_letter++;
+			    	let meter = document.getElementById("meter");
+			    	meter.setAttribute('value',current_letter+1);
+			    	color_the_letters('text-warning');
+			    	player_score++;
+			    	update_nowords_time_score("score",player_score);
+
+			    	if(current_letter == temp_words_arr.length){
+			    		no_words += add_no_of_words_if_done;
+			    		load_words(get_new_words());
+			    	}
+			    }else{
+			    	//console.log("wrong "+cur_letter);
+			    	color_the_letters('text-danger');
+			    	player_score--;
+			    	update_nowords_time_score("score",player_score);
+			    }
+			}
+			
+			//console.log(temp_words_arr);
+		});
+
+		
+
+	</script>
+</head>
+<body>
+	<style type="text/css">
+		
+	</style>
+	<!-- Main -->
+	
+	<main class="text-center border" style="max-width: 600px;">
+		<div class="h4">
+			Typing Challenge Game
+		</div>
+		<div class="row text-warning">
+			<div class="col-4" id="nowords">0 Level</div>
+			<div class="col-4" id="time">00:00</div>
+			<div class="col-4" id="score">0</div>
+		</div>
+		<div>
+			<progress class="w-100" id="meter" value="0" max="0">
+		</div>
+		<div id="words" class="text-start text-wrap"></div>
+	</main>
+</body>
+</html>

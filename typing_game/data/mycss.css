@@ -1,0 +1,30 @@
+/*
+/////////////////////////////////////////////////////////////////////////////////
+//March 13 2024
+//by jasonxx
+/////////////////////////////////////////////////////////////////////////////////
+//start editing here
+*/
+
+
+/*
+/////////////////////////////////////////////////////////////////////////////////
+//do not edit beyon this line
+*/
+* {
+	padding: 0; 
+	margin: 0;
+	box-sizing: border-box; 
+	-moz-box-sizing: border-box; 
+	-webkit-box-sizing: border-box;
+}
+
+body {
+	font-family: calibri;
+	overflow: hidden;
+	font-size: 30pt;
+	background-color: black;
+	color: white;
+	text-align: center;
+}
+
