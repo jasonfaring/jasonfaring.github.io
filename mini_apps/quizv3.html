@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Offline Quiz App v2</title>
+</head>
+<body class="">
+	<style type="text/css">
+		.border {
+			border: solid red 1px;
+		}
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;		
+		}
+		body {
+			background-color: #eeeeee;
+			font-family: calibri;
+			font-size: 16pt;
+		}
+		.content {
+			width: 100%;
+			max-width: 400px;
+			height: 100%;
+			padding: 5px;
+			margin: auto;
+		}
+		.quiz_form {
+			margin-bottom: 20px; 
+			background-color: white;
+			width: 100%;
+			min-width: 300px;
+			max-width: 500px;
+		}
+		.quiz_head, .quiz_footer {
+			background-color: white;
+			padding: 20px;
+			display: flex;
+			justify-content: space-between;
+			flex-wrap: wrap;
+  			align-content: center;
+		}
+		.title {
+			font-weight: bold;
+			padding: 10px;
+		}
+		.timer {
+			background-color: green;
+			padding: 10px;
+			border-radius: 5px;
+			color: white;
+		}
+		.linebertween {
+			background-color: gray;
+			height: 5px;
+			box-shadow: 0px 0px 1px 0px #000000;
+		}
+		.quiz_body {
+			padding: 20px 30px;
+		}
+		.question {
+			font-size: 25px;
+		}
+		.ans_butt {
+			margin-bottom: 5px;
+			width: 100%;
+			padding: 15px;
+			font-size: 13pt;
+			text-align: left;
+			background-color: #d0edf5;
+			text-decoration: none;
+			border: solid #559aad 1pt;
+			border-radius: 5px;
+			transition: all ease 0.3s;
+		}
+		.ans_butt:hover:enabled {
+			cursor: pointer;
+			background-color: #0897bf;
+			color: white;
+		}
+		.ans_butt:active:enabled {
+			background-color: #A6BDC4;
+			border: solid gray 1pt;
+		}
+		
+		.quiz_footer, .user {
+			color: gray;	
+		}
+		.inputbox {
+			margin-bottom: 5px;
+			width: 100%;
+			padding: 10px;
+			font-size: 13pt;
+			border-radius: 5px;
+			text-decoration: none;
+			border: solid skyblue 1pt;
+		}
+		.def {
+			width: inherit;
+			padding: 8px 20px;
+			font-size: 13pt;
+			font-weight: bold;
+		}
+		
+		progress{
+			height: 5px;
+			width: 100%;
+			border-radius: 0;
+			margin: 0;
+			padding: 0;
+			background-color: #eeeeee;
+		}
+		progress::-webkit-progress-bar {
+			background-color: #eeeeee;
+		}
+		progress::-moz-progress-bar {
+			background-color: #eeeeee;
+		}
+		progress::-webkit-progress-value {
+			background-color: skyblue;
+		}
+		hr {
+			border: solid #eeeeee 1pt;
+		}
+	</style>
+	<div class="content">
+		<!-- Login -->
+		<div id="page1" class="quiz_form" style="display: ;">
+			<div class="quiz_head">
+				<div class="title">Registration</div>
+				<div class=""></div>
+			</div>
+			<hr>
+			<div class="quiz_body">
+				<br>
+				<h1 style="text-align: center;">Late Exams</h1>
+				<p style="text-align: center;">
+					<small>Topic: </small><span class="topic_title">Loading...</span><br>
+					<small class="currdate">Loading...</small>
+				</p>
+				<br>
+				<div>
+					<input id="input_a" class="inputbox" type="text" placeholder="Name">
+				</div>
+				<div>
+					<input id="input_b" class="inputbox" type="text" placeholder="Surname">
+				</div>
+				<div>
+					<input id="input_c" class="inputbox" type="text" placeholder="Year">
+				</div>
+				<div>
+					<input id="input_d" class="inputbox" type="text" placeholder="Course">
+				</div>
+				<br>
+				<button class="ans_butt def" onclick="get_inputdata()">Register</button>
+				<br>
+				<br>
+				<br>
+			</div>
+		</div>
+
+		<!-- Note -->
+		<div id="page2" class="quiz_form" style="display: none;">
+			<div class="quiz_head">
+				<div class="title">Please read carefully</div>
+				<div class=""></div>
+			</div>
+			<hr>
+			<div class="quiz_body">
+				<div>
+					<small style="color: gray;">
+						<i>
+						You are about to take a Quiz, be honest while answering questions...
+						Browsing the internet while taking the quiz will not going to help because it has a builtin timer...
+						please take note that <span style="color: red;">you only have one try to complete the quiz</span> bacause its offline...
+						also the questions are in random order...
+						</i>
+					</small>
+					<br><br>
+					<small style="color: gray;">
+						<i>
+						You need to answer <b><span class="no_q">?</span></b> questions... choose the best possible answer by clicking the respective button...<br> 
+						You have <b>10 minutes</b> to complete the quiz do not close the browser if you are not yet done...<br>
+						<br>
+						Good luck... 
+						</i>
+					</small>
+				</div>
+				<br>
+				<button class="ans_butt def" onclick="go_to(`page3`);">Lets Go!</button>
+				<br>
+				<br>
+				<br>
+			</div>
+		</div>
+
+		<!-- Quiz Form -->
+		<div id="page3" class="quiz_form" style="display: none;">
+			<div class="quiz_head">
+				<div class="title">SPCC Quiz</div>
+				<div id="show_timer" class="timer">00:00</div>
+			</div>
+			<progress id="myprog" value="0" max="0"></progress>
+			<div class="quiz_body">
+				<div class="question" id="questions">Loading...</div>
+				<br>
+				<button class="ans_butt" id="ans_a" data="" onclick="get_thisdata(`ans_a`)">Loading...</button>
+				<button class="ans_butt" id="ans_b" data="" onclick="get_thisdata(`ans_b`)">Loading...</button>
+				<button class="ans_butt" id="ans_c" data="" onclick="get_thisdata(`ans_c`)">Loading...</button>
+				<button class="ans_butt" id="ans_d" data="" onclick="get_thisdata(`ans_d`)">Loading...</button>
+			</div>
+			<br>
+			<br>
+			<hr>
+			<div class="quiz_footer">
+				<small class="q_num"><span class="q_no">Loading</span> / <span class="total_q">Loading</span></small>
+				<small class="user">User: <span class="username">Loading</span></small>
+			</div>
+		</div>
+
+
+		<!-- Score -->
+		<div id="page4" class="quiz_form" style="display: none;">
+			<br>
+			<!-- <div class="quiz_head">
+				<div class="title">Score</div>
+				<div class=""></div>
+			</div> -->
+			<progress id="myprog2" value="0" max="0"></progress>
+			<div class="quiz_body">
+				<div style="text-align: center;">
+					<br>
+					<br>
+					<br>
+					
+					<h1 id="fin_score" style="font-size: 50pt;">Loading</h1>
+					<h1><span style="color: orange;">Congratulations!</span></h1>
+					<p>You have completed the Quiz in <p class="topic_title">Loading...</p> within <span class="time_val">Loading</span>.</p>
+					<small class="currdate">Loading...</small><br>
+					<small style="color: gray;">
+						User: <span class="username">Loading...</span><br>
+						Course: <span class="userdetails">Loading...</span>
+					</small>
+					<br><br><br>
+					<small>Pls. print screen the result and send to aringj@systemsplus.edu.ph</small>
+				</div>
+				<br>
+				<br>
+				<br>
+				<!-- <button class="ans_butt def" onclick="reset_localstorage(); location.reload();">Reset Quiz</button> -->
+				<br>
+				<br>
+				<br>
+			</div>
+		</div>
+		
+		<!-- Footer -->
+		<br>
+		<div style="text-align: center; color: #b8b9ba;">
+			<small>
+				Offline Quiz App<br>
+				By: Jason Aring
+			</small>
+		</div>
+		<br><br><br><br><br>
+	</div>
+
+	<script type="text/javascript">
+		///////////////////////////////////////////////////////////////////
+		//May 7, 2022
+		//By jasonxx
+
+		///////////////////////////////////////////////////////////////////
+		//Variables
+		var current_user = "";
+		var current_details = "";
+		var sec_count = 0;
+		var min_count = 0;
+		var timer;
+		var timer_on_off = "off";
+		var final_time = "00:00";
+		var data = localStorage.getItem("user");
+		var current_question_no = 0;
+		var current_answers = [];
+		var current_page = "";
+		var minutes_quizduration = 10; //min
+		var button_delay = 3; //sec
+		var prog_width = 0;
+		var total_questions = 25;
+		//random questions
+
+		var topic_title = "For WST and ADET";
+		const q_arr = shuffle([
+			{	"no":"1",
+				"q":"HTML is best describe as?", 
+				"a":"Skin", 
+				"b":"Brain", 
+				"c":"Skeleton", 
+				"d":"Website"
+			},
+			{	"no":"2",
+				"q":"CSS is best describe as?", 
+				"a":"Programs", 
+				"b":"Skin", 
+				"c":"Backend", 
+				"d":"Brain"
+			},
+			{	"no":"3",
+				"q":"JS is the ____ of the webapp?", 
+				"a":"Father", 
+				"b":"Problem", 
+				"c":"Brain", 
+				"d":"Muscles" 
+			},
+			{	"no":"4",
+				"q":"&lt;p&gt;content&lt;/p&gt;<br>is use an example of what technology?", 
+				"a":"PHP", 
+				"b":"HTML", 
+				"c":"JAVASCRIPT", 
+				"d":"CSS"
+			},
+			{	"no":"5",
+				"q":"The following list are HTML Attributes except one.", 
+				"a":"class", 
+				"b":"id", 
+				"c":"width", 
+				"d":"&lt;img&gt;" 
+			},
+			{	"no":"6",
+				"q":"What tag should I use to create a division?", 
+				"a":"&lt;img&gt;", 
+				"b":"&lt;h1&gt;&lt;/h1&gt;", 
+				"c":"&lt;div&gt;&lt;/div&gt;", 
+				"d":"&lt;p&gt;&lt;/p&gt;" 
+			},
+			{	"no":"7",
+				"q":"Choose the right HTML syntax.", 
+				"a":"&lt;div class='title'&gt;Hi to all...&lt;/div&gt;", 
+				"b":"&lt;img src='my.jpg'' width='500' height='600'&gt;", 
+				"c":"&lt;a href='https://www.mysite.com'&gt;click&lt;a&gt;", 
+				"d":"&lt;button type='button'&gt;Click Me!&lt;/button&gt;" 
+			},
+			{	"no":"8",
+				"q":"We want to change the background color of a tag<br> &lt;p&gt; to red, what css code will work?", 
+				"a":".p {background-color: red;}", 
+				"b":"p {background-color: red;}", 
+				"c":"#p {background-color: red;}", 
+				"d":"par {background-color: red;}" 
+			},
+			{	"no":"9",
+				"q":"We want to change the width to 100% of<br>&lt;div class='mydiv'&gt abc &lt;/div&gt;<br> by selecting its classname,<br>what css code will work?", 			"a":".div {width: 100%;}", 
+				"b":"div {width: 100%;}", 
+				"c":"#mydiv {width: 100%;}", 
+				"d":".mydiv {width: 100%;}" 
+			},
+			{	"no":"10",
+				"q":"We want to change the padding and margin of a specific div that has an id name of title, what css code will work?", 
+				"a":"#title {padding: 30px; margin: 30px;}", 
+				"b":"title {padding: 30px; margin: 30px;}", 
+				"c":"#div {padding: 30px; margin: 30px;}", 
+				"d":".div {padding: 30px; margin: 30px;}" 
+			},
+			{	"no":"11",
+				"q":"Complete the following statement;<br>JavaScript can...", 
+				"a":"add/change/remove Codes from SQL",
+				"b":"add/change/remove HTML elements, attributes, events and CSS styles", 
+				"c":"add/change/remove PHP Codes", 
+				"d":"add/change/remove Data from Local Disk"
+			},
+			{	"no":"12",
+				"q":"Function of querySelector('element');<br>is to ____", 
+				"a":"select an element by classname only",
+				"b":"select an element by id only", 
+				"c":"select an element by tagname, id or classname", 
+				"d":"select an element by query"
+			},
+			{	"no":"13",
+				"q":"Function of getElementsByTagName('element')<br>is to ____", 
+				"a":"select an element by id only",
+				"b":"select an element by class only", 
+				"c":"select an element by tagname only", 
+				"d":"select an element by HTML only"
+			},
+			{	"no":"14",
+				"q":"A javascript variable is like...", 
+				"a":"Cup",
+				"b":"Bag", 
+				"c":"Container", 
+				"d":"All are correct" 
+			},
+			{	"no":"15",
+				"q":"Correct way to declare a variable...", 
+				"a":"var 100var = 'myage';",
+				"b":"let myage = 100;", 
+				"c":"const var100 = 100,'age'",  
+				"d":"All are wrong" 
+			},
+			{	"no":"16",
+				"q":"Array can store multiple data, in this example<br>myarray=['Tom','May','Kim']<br>myarry has 3 indexes.<br>What code will work if we want to output a value 'May'?", 
+				"a":"let this_val = myarray[2];",
+				"b":"let this_val = myarray['May'];",
+				"c":"let this_val = myarray[1];", 
+				"d":"All are wrong" 
+			},
+			{	"no":"17",
+				"q":"<br>let z = 0; <br>let a = 5; <br>let b = 5; <br> z = (a+2)*(b-2); <br><br>What is now the value of z?", 
+				"a":"true",
+				"b":"null",
+				"c":"0", 
+				"d":"21" 
+			},
+			{	"no":"18",
+				"q":"alert('Hi to all!');<br>What will be the effect when we use this function?", 
+				"a":"It will pop up a message saying 'Good day to all!'",
+				"b":"Will call a function called 'Hi to all'",
+				"c":"Nothing", 
+				"d":"It will pop up a message saying 'Hi to all!'" 
+			},
+			{	"no":"19",
+				"q":"We want to count from 1 to 100 automatically, what javascript function can do the task?", 
+				"a":"alert('1 to 100');",
+				"b":"for( var i = 1; i <= 1; i++ ) {<br> //do something <br>}", 
+				"c":"console.log('1 to 100')", 
+				"d":"if( i<100 ){ //do something }" 
+			},
+			{	"no":"20",
+				"q":"This method innerHTML can do the following...", 
+				"a":"Replace/Change division content.", 
+				"b":"Replace/Change input value.", 
+				"c":"Replace/Change attribute value.", 
+				"d":"Replace/Change id name." 
+			},
+			{	"no":"21",
+				"q":"Basic structure of an Array.", 
+				"a":"let arr = (1,2,3,4);", 
+				"b":"const arr = [1,2,3,4];", 
+				"c":"const arr = (1,2,3,4);", 
+				"d":"var arr = 1,2,3,4;"
+			},
+			{	"no":"22",
+				"q":"Basic structure of a Function.", 
+				"a":"func add() { //do something };", 
+				"b":"function add { //do something };",  
+				"c":"function add() { //do something };",  
+				"d":"functions add[] ( //do something );"
+			},
+			{	"no":"23",
+				"q":"Basic structure of a for loop.", 
+				"a":"if(var i=0;i<100;i++){ //loop }", 
+				"b":"for(i++){ //loop }",  
+				"c":"if(i>=100){ //true }",  
+				"d":"for(var i=0;i<100;i++){ //loop }" 
+			},
+			{	"no":"24",
+				"q":"Correct example of an if statement.", 
+				"a":"if(var x=100){<br>//true<br>}else{<br>//false<br>}", 
+				"b":"if(x==100){<br>//true<br>}else{<br>//false<br>}", 
+				"c":"if(x*y){<br>//true<br>}else{<br>//false<br>}", 
+				"d":"if('true'){<br>//true<br>}else{<br>//false<br>}"
+			},
+			{	"no":"25",
+				"q":"Use of console.log().", 
+				"a":"it promps you error.", 
+				"b":"it promps you the value of a variable.", 
+				"c":"it promps you missing code.", 
+				"d":"it promps you an alert message."
+			}
+		]);
+
+		//key to correction ENCRYPTED answers HAHAHAHAHA!
+		const a_arr = ["1618","1648","1681","1710","1743","1773","1802","1805","1834","1867","48674","48706","48738","48769","48801","48830","48862","48894","48925","48954","49635","49667","49699","49731","49760","49791"];
+
+
+
+		///////////////////////////////////////////////////////////////////
+		//What to do
+		window.addEventListener("load", function(){
+			//check if has localstorage
+			if(data == null || data == undefined){
+				go_to("page1");
+			}else{
+				//get old data
+				get_saved_data();
+			}
+			//key to correction maker
+			//make_key_to_correction();
+			get_today();
+		});
+
+
+		///////////////////////////////////////////////////////////////////
+		//functions
+		function get_today(){
+			const date = new Date().toLocaleString('en-US', { 
+				timeZone: 'Asia/Manila',
+				year: 'numeric',
+				month: 'long',
+				day: '2-digit'
+			});
+			let currdate = document.getElementsByClassName('currdate');
+			for (let i = 0; i < currdate.length; i++) {
+			  currdate[i].innerHTML = date;
+			}
+			let no_q = document.getElementsByClassName('no_q');
+			for (let i = 0; i < no_q.length; i++) {
+			  no_q[i].innerHTML = total_questions;
+			}
+		}
+
+		function calculate_progress(){
+			let ww = document.getElementById('myprog').getBoundingClientRect().width;
+			let ww2 = document.getElementById('myprog2').getBoundingClientRect().width;
+
+			let item_count = total_questions;
+			document.getElementById("myprog").setAttribute("max",ww);
+			document.getElementById("myprog").value = (ww/item_count)*current_question_no;
+			document.getElementById("myprog2").setAttribute("max",ww2);
+			document.getElementById("myprog2").value = (ww2/item_count)*current_question_no;
+		}
+
+		function disable_button_for2_sec(){
+			document.getElementById("ans_a").disabled = true;
+			document.getElementById("ans_b").disabled = true;
+			document.getElementById("ans_c").disabled = true;
+			document.getElementById("ans_d").disabled = true;
+			setTimeout(function(){
+				document.getElementById("ans_a").disabled = false;
+				document.getElementById("ans_b").disabled = false;
+				document.getElementById("ans_c").disabled = false;
+				document.getElementById("ans_d").disabled = false;
+			}, button_delay*1000);
+		}	
+
+		function make_key_to_correction(none_encript_a_arr=[]){
+			let string = "";
+			none_encript_a_arr.forEach((val, index) => {
+				string += '"'+hashCode(val)+'",';
+			});
+			console.log(string);
+		}
+
+		function compute_score(){
+			let score = 0;
+			let outoff = total_questions;
+			current_answers.forEach((val1, index1) => {
+				a_arr.forEach((val2, index2) => {
+					if(hashCode(val1) == val2){
+						score++;	
+					}
+				});
+			});
+			let percent_score = ((score / outoff)*50)+50;
+			document.getElementById("fin_score").innerHTML = score+" / "+outoff+"<br>"+percent_score+"%";
+		}
+		
+		function hashCode(str) {
+			var hash = 0;
+			for (var i = 0; i < str.length; i++) {
+				hash = ~~(((hash << 5) - hash) + str.charCodeAt(i));
+			}
+			return hash;
+		}
+
+		function get_thisdata(id){
+			disable_button_for2_sec();
+			let answer = document.getElementById(id).getAttribute("data");
+			//save answer to arr current_answers
+			current_answers.push(answer);
+			//goto next question
+			current_question_no++;
+			save_curr_question_no();
+			load_questions(q_arr,current_question_no);
+			calculate_progress();
+			load_data_to_html();
+		}
+
+		function load_questions(arr,i){
+			//let arr_count = arr.length;
+			if(i < total_questions){
+				let number = Number(i)+1;
+				document.getElementById("questions").innerHTML = "Q"+number+":<br>"+arr[i]['q'];
+				document.getElementById("ans_a").innerHTML = "A. "+arr[i]['a'];
+				document.getElementById("ans_b").innerHTML = "B. "+arr[i]['b'];
+				document.getElementById("ans_c").innerHTML = "C. "+arr[i]['c'];
+				document.getElementById("ans_d").innerHTML = "D. "+arr[i]['d'];
+
+				document.getElementById("ans_a").setAttribute("data", arr[i]['no']+"a");
+				document.getElementById("ans_b").setAttribute("data", arr[i]['no']+"b");
+				document.getElementById("ans_c").setAttribute("data", arr[i]['no']+"c");
+				document.getElementById("ans_d").setAttribute("data", arr[i]['no']+"d");
+			}else{
+				stop_timer();
+				go_to("page4");
+			}
+		}
+
+		function load_data_to_html(){
+			let el1 = document.getElementsByClassName("username");
+			for (let i = 0; i < el1.length; i++) {
+			  el1[i].innerHTML = current_user;
+			}
+			let el2 = document.getElementsByClassName("userdetails");
+			for (let i = 0; i < el2.length; i++) {
+			  el2[i].innerHTML = current_details;
+			}
+			let el3 = document.getElementsByClassName("time_val");
+			for (let i = 0; i < el3.length; i++) {
+			  el3[i].innerHTML = final_time;
+			}
+			let el4 = document.getElementsByClassName("q_no");
+			for (let i = 0; i < el4.length; i++) {
+			  el4[i].innerHTML = current_question_no;
+			}
+			let el5 = document.getElementsByClassName("total_q");
+			for (let i = 0; i < el5.length; i++) {
+			  el5[i].innerHTML = total_questions;
+			}
+			let el6 = document.getElementsByClassName("topic_title");
+			for (let i = 0; i < el6.length; i++) {
+			  el6[i].innerHTML = topic_title;
+			}
+		}
+
+		function get_inputdata(){
+			//get value from input box at page1
+			let a = document.getElementById("input_a").value;
+			let b = document.getElementById("input_b").value;
+			let c = document.getElementById("input_c").value;
+			let d = document.getElementById("input_d").value;
+
+			//check if all has value
+			if(a == "" || b == "" || c == "" || d == ""){
+				alert("Missing data from the input boxes...");
+				return false;
+			}
+			//save to browsers localstorage
+			//localstorage must have the ff
+			//name year course of user
+			//time
+			//current question answers
+			current_user = a+" "+b;
+			current_details = c+" year "+d+".";
+			save_to_local();
+			
+			//go to page2
+			go_to("page2");
+		}
+
+		function save_to_local(){
+			localStorage.setItem("user", current_user);//name
+			localStorage.setItem("details", current_details);//year course
+			localStorage.setItem("timeleft_sec", sec_count);
+			localStorage.setItem("timeleft_min", min_count);
+			localStorage.setItem("final_time", final_time);
+			localStorage.setItem("current_question_no", current_question_no);
+			save_answers_to_localstorage(current_answers);
+			save_curr_page(current_page);
+		}
+
+		function get_saved_data(){
+			current_user = localStorage.getItem("user");
+			current_details = localStorage.getItem("details");
+			sec_count = localStorage.getItem("timeleft_sec");
+			min_count = localStorage.getItem("timeleft_min");
+			final_time = localStorage.getItem("final_time");
+			current_question_no = localStorage.getItem("current_question_no");
+			//convert string to arr
+			let arr = localStorage.getItem("current_answers");
+			if(arr != null){
+				current_answers = arr.split(",");
+			}
+			current_page = localStorage.getItem("current_page");
+			go_to(current_page);
+		}
+
+		function save_answers_to_localstorage(arr){
+			//conver arr to string
+			let arr_string = arr.toString();
+			localStorage.setItem("current_answers", arr_string);
+		}
+
+		function save_curr_page(pagename){
+			localStorage.setItem("current_page", pagename);
+		}
+
+		function save_curr_question_no(){
+			localStorage.setItem("current_question_no", current_question_no);
+		}
+		
+		function start_timer(){
+			if (timer_on_off == "off") {
+				timer_on_off = "on";
+				counting();
+			}
+		}
+
+		function stop_timer(){
+			clearTimeout(timer);
+			timer_on_off = "off";
+		}
+
+		function counting() {
+			let min = minutes_quizduration;
+			let timer_format;
+			//check if timer is on
+			if(timer_on_off == "on"){
+				//check if sec reached 60 sec
+				//if true min + 1 and sec back to 0
+				//else sec + 1 
+				if(sec_count >= 60){
+					min_count++;
+					sec_count = 0;
+				}else{
+					sec_count++;
+				}
+				//format the sec and min
+				timer_format = add_zero(min_count, 2)+":"+add_zero(sec_count, 2);
+				final_time = timer_format;
+
+				if(min_count >= min){
+					stop_timer();
+					go_to("page4");
+				}
+				//show the timer
+				document.getElementById("show_timer").innerHTML = timer_format;
+				//do the count
+				timer = setTimeout(counting, 1000);
+			}	
+		}
+
+		function add_zero(num, places) {
+			var zero = places - num.toString().length + 1;
+			return Array(+(zero > 0 && zero)).join("0") + num;
+		}
+
+		function go_to(pagename){
+			//hide all pages
+			document.getElementById("page1").style.display = "none";
+			document.getElementById("page2").style.display = "none";
+			document.getElementById("page3").style.display = "none";
+			document.getElementById("page4").style.display = "none";
+			//if pagename = to page the show it
+			if(pagename == "page1"){
+				current_page = "page1";
+				document.getElementById("page1").style.display = "";
+			}
+			if(pagename == "page2"){
+				current_page = "page2";
+				document.getElementById("page2").style.display = "";
+			}
+			if(pagename == "page3"){
+				current_page = "page3";
+				//run the timer
+				start_timer();
+				//load the questions in random
+				disable_button_for2_sec();
+				load_questions(q_arr,current_question_no);
+				document.getElementById("page3").style.display = "";
+			}
+			if(pagename == "page4"){
+				current_page = "page4";
+				compute_score();
+				document.getElementById("page4").style.display = "";
+			}
+			//load name course detils to html
+			load_data_to_html();
+			save_to_local();
+			calculate_progress();
+		}
+
+		function shuffle(array) {
+			return array.sort(() => Math.random() - 0.5);
+		}
+	</script>
+</body>
+</html>
